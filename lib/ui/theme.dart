@@ -4,8 +4,9 @@ import '../diagnostics/models.dart';
 
 const _seed = Color(0xFF1565C0);
 
-ThemeData buildTheme(Brightness b) => ThemeData(
+ThemeData buildTheme(Brightness b, {String? fontFamily}) => ThemeData(
       useMaterial3: true,
+      fontFamily: fontFamily,
       colorScheme: ColorScheme.fromSeed(seedColor: _seed, brightness: b),
       cardTheme: const CardThemeData(margin: EdgeInsets.zero, clipBehavior: Clip.antiAlias),
     );

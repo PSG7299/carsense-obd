@@ -51,14 +51,18 @@ The OBD-II port is under the dashboard on the driver's side, near your knees, on
 
 ## Install
 
-Every push to `main` builds the apps automatically. Download them from the
-**Actions** tab: open the latest *Build* run and scroll to **Artifacts**.
+Download the latest version from the **[Releases page](https://github.com/PSG7299/carsense-obd/releases/latest)**.
+It has `CarSense-windows.zip`, `CarSense-android.apk` and the tutorial video.
+
+🎬 **How-to video:** [docs/video/CarSense-how-to.mp4](docs/video/CarSense-how-to.mp4) (4 min). It covers the
+hardware, Windows and Android.
 
 * **Android:** `CarSense-android-apk` → `CarSense-android.apk`. Copy it to the phone and open it (allow
   "install unknown apps").
 * **Windows:** `CarSense-windows` → unzip anywhere → run `carsense_obd.exe`.
 
-Pushing a tag such as `v1.0.0` also creates a GitHub Release with both files attached.
+Every push to `main` also builds both apps; you can download them from the **Actions** tab under *Artifacts*.
+Pushing a tag such as `v1.0.1` publishes a new release.
 
 ## How to use
 
@@ -99,6 +103,13 @@ flutter analyze
 flutter test                                   # unit + full demo-car UI flow
 SCREENSHOT_DIR=/tmp/shots flutter test test/ui_smoke_test.dart   # also saves screenshots
 flutter run -d windows                         # or an Android device
+```
+
+To re-record the tutorial video (needs ffmpeg):
+
+```bash
+VIDEO_DIR=/tmp/frames FLUTTER_ROOT=<flutter sdk> flutter test tool/video/make_video_test.dart
+tool/video/encode.sh /tmp/frames docs/video/CarSense-how-to.mp4
 ```
 
 ```

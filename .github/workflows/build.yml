@@ -83,11 +83,15 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
+          name: CarSense OBD ${{ github.ref_name }}
+          body_path: docs/RELEASE_NOTES.md
           files: |
             CarSense-android.apk
             CarSense-windows.zip
+            docs/video/CarSense-how-to.mp4

@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +13,7 @@ class ConnectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isAndroid = defaultTargetPlatform == TargetPlatform.android;
     final s = context.watch<AppState>();
     final theme = Theme.of(context);
     final real = s.adapters.where((a) => !a.isDemo).toList();
@@ -41,7 +41,7 @@ class ConnectScreen extends StatelessWidget {
                     Text('Connect your car', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
                     const SizedBox(height: 8),
                     _Step(1, 'Plug the USB OBD-II adapter into the port under the dashboard (driver side, near your knees).'),
-                    _Step(2, Platform.isAndroid
+                    _Step(2, isAndroid
                         ? 'Connect the adapter to your phone with a USB-OTG adapter and allow USB access when asked.'
                         : 'Connect the adapter to this PC. It appears as a COM port (install the CH340/FTDI driver if it does not).'),
                     _Step(3, 'Turn the ignition ON (engine may be off or idling). Car must be parked.'),
@@ -79,7 +79,7 @@ class ConnectScreen extends StatelessWidget {
                   child: ListTile(
                     leading: const Icon(Icons.usb_off),
                     title: const Text('No adapter found'),
-                    subtitle: Text(Platform.isAndroid
+                    subtitle: Text(isAndroid
                         ? 'Plug in the adapter via OTG and tap refresh.'
                         : 'Plug in the adapter and tap refresh. Check Device Manager → Ports (COM & LPT).'),
                   ),
