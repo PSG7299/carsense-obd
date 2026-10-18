@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'mock_transport.dart';
+import 'replay_transport.dart';
 import 'serial_desktop_transport.dart';
 import 'transport.dart';
 import 'usb_android_transport.dart';
@@ -18,5 +19,10 @@ Future<List<TransportCandidate>> discoverAdapters() async {
     // Plugin unavailable (e.g. tests) – demo cars still work.
   }
   out.addAll(DemoCar.values.map(MockCandidate.new));
+  try {
+    out.addAll(await ReplayCandidate.list());
+  } catch (_) {
+    // No bundled simulations (e.g. some tests).
+  }
   return out;
 }

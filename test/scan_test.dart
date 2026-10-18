@@ -9,10 +9,10 @@ import 'package:carsense_obd/vehicles/profiles.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<(ScanReport, MockTransport)> _scan(DemoCar car) async {
-  final mock = MockTransport(car, latency: const Duration(milliseconds: 1), seed: 7);
+  final mock = MockTransport(car, latency: Duration.zero, seed: 7, virtualTime: true);
   final elm = Elm327(mock);
   await elm.connect();
-  final data = await ObdService(elm).scan(sampling: const Duration(seconds: 3));
+  final data = await ObdService(elm).scan(fastRounds: 200);
   final report = const HealthEngine().evaluate(data);
   await elm.close();
   return (report, mock);

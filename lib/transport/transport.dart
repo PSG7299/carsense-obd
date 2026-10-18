@@ -27,6 +27,12 @@ abstract class TransportCandidate {
   Future<ObdTransport> create();
 }
 
+/// Simulated adapters that can play a "driver starts the engine" sequence
+/// for the battery test.
+abstract class EngineStartSimulator {
+  void simulateEngineStart();
+}
+
 class TransportException implements Exception {
   TransportException(this.message);
   final String message;

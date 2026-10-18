@@ -84,6 +84,13 @@ Swifts may use KWP2000.
 * A cheap clone adapter can be slow or drop out. If a scan fails, try again or use a better adapter.
 * The results are a guide. They do not replace an inspection by a mechanic.
 
+## MATLAB simulation
+
+[`simulation/`](simulation/) contains a MATLAB / GNU Octave model of the Nexon and Swift engines
+(warm-up, closed-loop fuel control, O2 sensors, catalyst, battery and alternator) with 9 fault scenarios.
+It checks the diagnosis logic and produces adapter replays. The app is tested against these replays, and
+you can open them in the app under *Connect → MATLAB simulations*.
+
 ## Development
 
 ```bash

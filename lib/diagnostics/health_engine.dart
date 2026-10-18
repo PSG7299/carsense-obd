@@ -475,12 +475,17 @@ class HealthEngine {
     }
     final before = volts.sublist(0, math.max(1, math.min(minIdx, 10)));
     final rest = _median(before);
-    final crankMin = volts[minIdx];
-    final cranked = rest - crankMin > 1.0;
+    // Cranking voltage = median of the dip, so one starter-inrush sample
+    // does not decide the verdict (found with the MATLAB simulation).
+    final dip = volts.where((v) => v < rest - 1.0).toList();
+    final cranked = dip.isNotEmpty;
+    final crankMin = cranked ? _median(dip) : volts[minIdx];
     final after = cranked ? volts.sublist(minIdx) : volts;
     final tail = after.sublist(math.max(0, after.length - math.min(after.length, 15)));
     final charging = _median(tail);
-    final engineStarted = cranked && charging > rest + 0.3;
+    // Judge charging whenever the engine was cranked – a dead alternator
+    // leaves the voltage *below* the resting voltage.
+    final engineStarted = cranked && after.length >= 5;
 
     var status = Status.ok;
     // Resting battery

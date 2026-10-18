@@ -118,9 +118,12 @@ class ObdService {
       ];
 
   /// Full read-only health scan. [profileOverride] forces a car profile.
+  /// [fastRounds] fixes the number of fast-loop samples instead of using
+  /// [sampling] time (used to replay simulations deterministically).
   Future<ScanData> scan({
     VehicleProfile? profileOverride,
     Duration sampling = const Duration(seconds: 12),
+    int? fastRounds,
     Progress? onProgress,
   }) async {
     void p(String s, double f) => onProgress?.call(s, f);
@@ -173,7 +176,7 @@ class ObdService {
         if (supported.contains(pid)) pid,
     ];
     var n = 0;
-    while (sw.elapsed < sampling && fast.isNotEmpty) {
+    while (fast.isNotEmpty && (fastRounds == null ? sw.elapsed < sampling : n < fastRounds)) {
       for (final pid in fast) {
         await sample(pid);
       }

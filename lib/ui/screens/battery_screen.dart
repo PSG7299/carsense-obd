@@ -88,7 +88,7 @@ class BatteryScreen extends StatelessWidget {
           Row(children: [
             stat('At rest', res.restVoltage, Icons.battery_std),
             const SizedBox(width: 8),
-            stat('Lowest while cranking', res.crankMin, Icons.offline_bolt_outlined),
+            stat('While cranking', res.crankMin, Icons.offline_bolt_outlined),
             const SizedBox(width: 8),
             stat('Charging', res.chargingVoltage, Icons.electric_bolt),
           ]),

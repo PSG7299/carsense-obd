@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../state/app_state.dart';
+import '../../transport/replay_transport.dart';
 import '../../transport/transport.dart';
 import '../widgets/common.dart';
 
@@ -16,7 +17,8 @@ class ConnectScreen extends StatelessWidget {
     final s = context.watch<AppState>();
     final theme = Theme.of(context);
     final real = s.adapters.where((a) => !a.isDemo).toList();
-    final demo = s.adapters.where((a) => a.isDemo).toList();
+    final demo = s.adapters.where((a) => a.isDemo && a is! ReplayCandidate).toList();
+    final sims = s.adapters.whereType<ReplayCandidate>().toList();
 
     Future<void> connect(TransportCandidate c) async {
       final state = context.read<AppState>();
@@ -108,6 +110,26 @@ class ConnectScreen extends StatelessWidget {
                           : const Icon(Icons.chevron_right),
                       onTap: s.link == Link.connecting ? null : () => connect(a),
                     ),
+                  ),
+                ),
+              if (sims.isNotEmpty)
+                Card(
+                  child: ExpansionTile(
+                    leading: const Icon(Icons.functions),
+                    title: Text('MATLAB simulations (${sims.length})'),
+                    subtitle: const Text('Nexon & Swift fault scenarios recorded from the car simulation'),
+                    children: [
+                      for (final a in sims)
+                        ListTile(
+                          dense: true,
+                          title: Text(a.title.replaceFirst('MATLAB sim: ', '')),
+                          subtitle: Text(a.subtitle),
+                          trailing: s.link == Link.connecting && s.connectedName == a.title
+                              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                              : const Icon(Icons.chevron_right),
+                          onTap: s.link == Link.connecting ? null : () => connect(a),
+                        ),
+                    ],
                   ),
                 ),
             ]),

@@ -99,6 +99,8 @@ class BatteryTestResult {
   });
 
   final double? restVoltage;
+
+  /// Median voltage during cranking (the starter-motor dip).
   final double? crankMin;
   final double? chargingVoltage;
   final Status status;

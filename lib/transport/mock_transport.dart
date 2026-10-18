@@ -15,9 +15,15 @@ enum DemoCar {
 
 /// A simulated ELM327 + car at warm idle, used for the demo mode and tests.
 /// Answers exactly like a real adapter (CAN 11-bit, headers on, ISO-TP).
-class MockTransport implements ObdTransport {
-  MockTransport(this.car, {this.latency = const Duration(milliseconds: 12), int? seed})
+class MockTransport implements ObdTransport, EngineStartSimulator {
+  /// With [virtualTime] the simulated clock advances 40 ms per request
+  /// instead of following the wall clock, making tests independent of
+  /// machine speed.
+  MockTransport(this.car, {this.latency = const Duration(milliseconds: 12), int? seed, this.virtualTime = false})
       : _rnd = math.Random(seed);
+
+  final bool virtualTime;
+  int _requests = 0;
 
   final DemoCar car;
   final Duration latency;
@@ -40,7 +46,7 @@ class MockTransport implements ObdTransport {
 
   bool get _faulty => car == DemoCar.swiftFaulty;
   bool get _nexon => car == DemoCar.nexonHealthy;
-  double get _t => _clock.elapsedMilliseconds / 1000;
+  double get _t => virtualTime ? _requests * 0.04 : _clock.elapsedMilliseconds / 1000;
 
   @override
   Future<void> open(int baudRate) async {
@@ -60,6 +66,7 @@ class MockTransport implements ObdTransport {
   }
 
   /// Battery test demo: the simulated driver starts the engine in 3 s.
+  @override
   void simulateEngineStart() => _crankAt = _t + 3;
 
   @override
@@ -71,6 +78,7 @@ class MockTransport implements ObdTransport {
       _pending = _pending.substring(i + 1);
       if (cmd.isEmpty) continue;
       received.add(cmd);
+      _requests++;
       final reply = _answer(cmd);
       Future<void>.delayed(latency, () => _ctrl?.add('$reply\r\r>'));
     }

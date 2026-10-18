@@ -24,6 +24,16 @@ jobs:
       - run: flutter analyze
       - run: flutter test
 
+  simulation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install GNU Octave
+        run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends octave
+      - name: MATLAB/Octave simulation tests
+        working-directory: simulation
+        run: octave-cli --no-gui --eval "addpath('tests'); run_tests"
+
   android:
     needs: test
     runs-on: ubuntu-latest

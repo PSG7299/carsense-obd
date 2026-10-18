@@ -9,7 +9,6 @@ import '../elm327/elm327.dart';
 import '../obd/obd_service.dart';
 import '../obd/pids.dart';
 import '../transport/discovery.dart';
-import '../transport/mock_transport.dart';
 import '../transport/transport.dart';
 import '../vehicles/profiles.dart';
 import '../vehicles/vehicle_profile.dart';
@@ -49,7 +48,7 @@ class AppState extends ChangeNotifier {
   ObdTransport? _transport;
   Elm327? elm;
   ObdService? obd;
-  bool get isDemo => _transport is MockTransport;
+  bool get isDemo => _transport is EngineStartSimulator;
 
   Future<void> connect(TransportCandidate c) async {
     await disconnect();
@@ -257,7 +256,7 @@ class AppState extends ChangeNotifier {
     _lastBattery = null;
     notifyListeners();
     final t = _transport;
-    if (t is MockTransport) t.simulateEngineStart();
+    if (t is EngineStartSimulator) (t as EngineStartSimulator).simulateEngineStart();
     final sw = Stopwatch()..start();
     while (sw.elapsed.inSeconds < seconds && elm != null) {
       final v = await elm!.batteryVoltage();
