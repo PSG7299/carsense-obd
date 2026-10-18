@@ -6,6 +6,11 @@ on:
     tags: ['v*']
   pull_request:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Publish a GitHub Release with this tag (e.g. v1.0.1). Leave empty to just build.'
+        required: false
+        default: ''
 
 env:
   FLUTTER_VERSION: '3.47.7'
@@ -77,7 +82,7 @@ jobs:
           path: CarSense-windows.zip
 
   release:
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
     needs: [android, windows]
     runs-on: ubuntu-latest
     permissions:
@@ -89,7 +94,9 @@ jobs:
           merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
-          name: CarSense OBD ${{ github.ref_name }}
+          tag_name: ${{ inputs.release_tag || github.ref_name }}
+          target_commitish: ${{ github.sha }}
+          name: CarSense OBD ${{ inputs.release_tag || github.ref_name }}
           body_path: docs/RELEASE_NOTES.md
           files: |
             CarSense-android.apk

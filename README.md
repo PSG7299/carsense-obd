@@ -62,7 +62,8 @@ hardware, Windows and Android.
 * **Windows:** `CarSense-windows` → unzip anywhere → run `carsense_obd.exe`.
 
 Every push to `main` also builds both apps; you can download them from the **Actions** tab under *Artifacts*.
-Pushing a tag such as `v1.0.1` publishes a new release.
+To publish a new release, push a tag such as `v1.0.1`, or run the *Build* workflow manually
+(Actions → Build → Run workflow) with a release tag.
 
 ## How to use
 
