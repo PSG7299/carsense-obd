@@ -99,3 +99,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# Patched plugin copies – see third_party/README.md.
+dependency_overrides:
+  flutter_libserialport:
+    path: third_party/flutter_libserialport
+  usb_serial:
+    path: third_party/usb_serial
